@@ -13,20 +13,23 @@ public class Database {
     private Connection connection;
 
     public Database(String dbHost, String dbUsername, String dbPassword) {
-        this.dbHost = dbHost;
-        this.dbUsername = dbUsername;
-        this.dbPassword = dbPassword;
-        connect();
-    }
 
-    private void connect() {
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://" + dbHost + ":3306/your_database", dbUsername, dbPassword);
-            System.out.println("Connected to the database");
-        } catch (SQLException e) {
-            e.printStackTrace();
+            Class.forName("org.postgresql.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/" + dbHost, dbUsername,dbPassword);
+
+            if(connection != null){
+                System.out.println("connection ok");
+            }else{
+                System.out.println("connection failed");
+            }
+            connection.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
+
 
     public ResultSet searchData(String query) {
         try {
