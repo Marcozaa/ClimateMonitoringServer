@@ -29,33 +29,44 @@ public class ServerThread implements Runnable {
                     out.writeObject(rs);
                     break;
                 case "insertMonitoringCenterData":
+                    System.out.println("Ricevuto comando insertMonitoringCenterData");
                     String data = (String) in.readObject();     //vedere come inserire i dati
                     database.insertMonitoringCenterData(data);
                     out.writeObject("Data inserted");
                     break;
                 case "registerOperator":
+                    System.out.println("Ricevuto comando registerOperator");
                     String username = (String) in.readObject();   //mettere tutti i dati dell'operatore
                     String password = (String) in.readObject();
                     database.registerOperator(username, password);
                     out.writeObject("Operator registered");
                     break;
                 case "insertAreaOfInterest":
-                    String areaInfo = (String) in.readObject();   //gestire come funziona l'inserimento
-                    database.insertAreaOfInterest(areaInfo);
+                    System.out.println("Ricevuto comando insertAreaOfInterest");
+                    String nome = (String) in.readObject();   //gestire come funziona l'inserimento
+
+                    String stato = (String) in.readObject();
+                    double latitudine = (double) in.readObject();
+                    double longitudine = (double) in.readObject();
+                    System.out.println("Nome: " + nome + " Stato: " + stato + " Latitudine: " + latitudine + " Longitudine: " + longitudine);
+                    database.insertAreaOfInterest(nome, stato, latitudine, longitudine);
                     out.writeObject("Area of interest inserted");
                     break;
                 case "validateUser":
+                    System.out.println("Ricevuto comando validateUser");
                     String user = (String) in.readObject();
                     String pass = (String) in.readObject();
                     boolean isValid = database.validateUser(user, pass);
                     out.writeObject(isValid);
                     break;
                 case "insertClimateParameters":
+                    System.out.println("Ricevuto comando insertClimateParameters");
                     String parameters = (String) in.readObject();  // gestire inserimento
                     database.insertClimateParameters(parameters);
                     out.writeObject("Climate parameters inserted");
                     break;
                 case "viewClimateParameters":
+                    System.out.println("Ricevuto comando viewClimateParameters");
                     ResultSet climateRs = database.viewClimateParameters();
                     out.writeObject(climateRs);
                     break;

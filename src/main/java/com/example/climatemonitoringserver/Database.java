@@ -1,10 +1,6 @@
 package com.example.climatemonitoringserver;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Database {
     private String dbHost;
@@ -16,14 +12,14 @@ public class Database {
 
         try {
             Class.forName("org.postgresql.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/" + dbHost, dbUsername,dbPassword);
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/" + dbHost, dbUsername,dbPassword);
 
             if(connection != null){
                 System.out.println("connection ok");
             }else{
                 System.out.println("connection failed");
             }
-            connection.close();
+            //connection.close();
 
         } catch (Exception e) {
             System.out.println(e);
@@ -42,6 +38,7 @@ public class Database {
     }
 
     public synchronized void insertMonitoringCenterData(String data) {
+
         try {
 
             PreparedStatement stmt = connection.prepareStatement("INSERT INTO monitoring_centers (data) VALUES (?)");
@@ -52,6 +49,7 @@ public class Database {
             e.printStackTrace();
         }
     }
+
 
     public synchronized void registerOperator(String username, String password) {  // aggiungere info operatore
         try {
@@ -65,15 +63,20 @@ public class Database {
         }
     }
 
-    public synchronized void insertAreaOfInterest(String areaInfo) { //gestire inserimento area interesse
+    public synchronized void insertAreaOfInterest(String nome, String stato, double latitudine, double longitudine ) { //gestire inserimento area interesse
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO areas_of_interest (info) VALUES (?)");
-            stmt.setString(1, areaInfo);
+
+
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO areeinteresse (nome, latitudine, longitudine) VALUES (?, ?, ?)");
+            stmt.setString(1, nome);
+            stmt.setDouble(2, latitudine);
+            stmt.setDouble(3, longitudine);
             stmt.executeUpdate();
             notifyAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     public boolean validateUser(String username, String password) {

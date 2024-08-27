@@ -6,15 +6,15 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="400.0" prefWidth="500.0" spacing="40.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.climatemonitoringserver.HelloApplication">
+<VBox alignment="CENTER" prefHeight="400.0" prefWidth="500.0" spacing="40.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.climatemonitoringserver.HelloApplication">
     <padding>
         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
     </padding>
-   <Label text="Label" />
+   <Label text="Nome database" />
    <TextField fx:id="dbNameInput" />
-   <Label text="Label" />
+   <Label text="Nome utente" />
    <TextField fx:id="dbUsername" />
-   <Label text="Label" />
+   <Label text="Password" />
    <TextField fx:id="dbPassword" />
    <Button fx:id="dbInvioDati" mnemonicParsing="false" onAction="#invioDatiDB" text="Button" />
 </VBox>
