@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -29,6 +30,8 @@ public class HelloApplication extends Application {
     @FXML
     private Button dbInvioDati;
 
+    Font font = Font.loadFont(getClass().getResourceAsStream("/font/Montserrat-VariableFont_wght.ttf"), 12);
+
     @FXML
     private void invioDatiDB(){
         String nomeDatabase = dbNameInput.getText();
@@ -42,6 +45,7 @@ public class HelloApplication extends Application {
             System.out.println("Server ready");
             while (true) {
                 Socket cliSocket = ss.accept();
+                System.out.println("Client connected: socket = " + cliSocket);
                 new Thread(new ServerThread(cliSocket, dataBase)).start();
                 //cliSocket.close();
             }
@@ -75,10 +79,15 @@ public class HelloApplication extends Application {
 
 
         stage.setScene(scene);
+
+
         stage.show();
 
     }
 
+    public void initialize() {
+
+    }
 
 
 

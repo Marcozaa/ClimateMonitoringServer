@@ -4,13 +4,18 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox alignment="CENTER" prefHeight="400.0" prefWidth="500.0" spacing="40.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.climatemonitoringserver.HelloApplication">
     <padding>
         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
     </padding>
-   <Label text="Nome database" />
+   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+      <children>
+         <Label alignment="CENTER_RIGHT" text="Nome database" />
+      </children>
+   </HBox>
    <TextField fx:id="dbNameInput" />
    <Label text="Nome utente" />
    <TextField fx:id="dbUsername" />
