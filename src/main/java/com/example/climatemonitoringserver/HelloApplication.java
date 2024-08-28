@@ -36,7 +36,7 @@ public class HelloApplication extends Application {
         String passwordDB = dbPassword.getText();
 
         dataBase = new Database(nomeDatabase, usernameDB, passwordDB);
-
+    //ClimateMonitoringApp
         try {
             ss = new ServerSocket(PORT);
             System.out.println("Server ready");
@@ -78,6 +78,9 @@ public class HelloApplication extends Application {
         stage.show();
 
     }
+
+
+
 
     public static void main(String[] args) {
         launch();

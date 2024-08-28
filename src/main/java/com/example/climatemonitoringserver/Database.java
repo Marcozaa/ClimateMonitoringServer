@@ -53,7 +53,7 @@ public class Database {
 
     public synchronized void registerOperator(String username, String password) {  // aggiungere info operatore
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO operators (username, password) VALUES (?, ?)");
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO operatore (nome, password) VALUES (?, ?)");
             stmt.setString(1, username);
             stmt.setString(2, password);
             stmt.executeUpdate();
@@ -81,11 +81,15 @@ public class Database {
 
     public boolean validateUser(String username, String password) {
         try {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM operators WHERE username = ? AND password = ?");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM operatore WHERE nome = ? AND password = ?");
             stmt.setString(1, username);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
-            return rs.next();
+            if(rs.next()){
+                return true;
+            }else {
+                return false;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -94,7 +98,7 @@ public class Database {
 
     public synchronized void insertClimateParameters(String parameters) { //gestire inserimento parametri
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO climate_parameters (parameters) VALUES (?)");
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO rilevazione (parameters) VALUES (?)");
             stmt.setString(1, parameters);
             stmt.executeUpdate();
             notifyAll();
@@ -105,7 +109,7 @@ public class Database {
 
     public ResultSet viewClimateParameters() {
         try {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM climate_parameters");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM rilevazione");
             return stmt.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();

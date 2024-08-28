@@ -57,6 +57,7 @@ public class ServerThread implements Runnable {
                     String user = (String) in.readObject();
                     String pass = (String) in.readObject();
                     boolean isValid = database.validateUser(user, pass);
+                    System.out.println("is valid " + isValid);
                     out.writeObject(isValid);
                     break;
                 case "insertClimateParameters":
