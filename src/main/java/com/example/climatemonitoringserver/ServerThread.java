@@ -20,7 +20,7 @@ public class ServerThread implements Runnable {
     public void run() {
         try (ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
              ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {
-
+        	while(true) {
             String command = (String) in.readObject();
             switch (command) {
                 case "searchData":
@@ -36,9 +36,12 @@ public class ServerThread implements Runnable {
                     break;
                 case "registerOperator":
                     System.out.println("Ricevuto comando registerOperator");
-                    String username = (String) in.readObject();   //mettere tutti i dati dell'operatore
+                    String name = (String) in.readObject();   //mettere tutti i dati dell'operatore
+                    String surname = (String) in.readObject();
+                    String cf = (String) in.readObject();
+                    String email = (String) in.readObject();
                     String password = (String) in.readObject();
-                    database.registerOperator(username, password);
+                    database.registerOperator(name, surname, cf, email, password);
                     out.writeObject("Operator registered");
                     break;
                 case "insertAreaOfInterest":
@@ -75,6 +78,7 @@ public class ServerThread implements Runnable {
                     out.writeObject("Unknown command");
                     break;
             }
+        	}
         } catch (IOException | ClassNotFoundException  e) {
             e.printStackTrace();
         }

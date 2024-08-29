@@ -51,11 +51,15 @@ public class Database {
     }
 
 
-    public synchronized void registerOperator(String username, String password) {  // aggiungere info operatore
+
+    public synchronized void registerOperator(String nome, String cognome, String cf, String email, String password  ) {  // aggiungere info operatore
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO operatore (nome, password) VALUES (?, ?)");
-            stmt.setString(1, username);
-            stmt.setString(2, password);
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO operatore (nome, cognome, cf, email, password) VALUES (?, ?, ? , ?, ?)");
+            stmt.setString(1, nome);
+            stmt.setString(2, cognome);
+            stmt.setString(3, cf);
+            stmt.setString(4, email);
+            stmt.setString(5, password);
             stmt.executeUpdate();
             notifyAll();
         } catch (SQLException e) {
