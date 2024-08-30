@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerThread implements Runnable {
     private Socket socket;
@@ -30,8 +32,22 @@ public class ServerThread implements Runnable {
                     break;
                 case "insertMonitoringCenterData":
                     System.out.println("Ricevuto comando insertMonitoringCenterData");
-                    String data = (String) in.readObject();     //vedere come inserire i dati
-                    database.insertMonitoringCenterData(data);
+                    String nomeCentro = (String) in.readObject();   
+                    String via = (String) in.readObject();
+                    int cap = (int) in.readObject();
+                    int numeroCivico = (int) in.readObject();
+                    String comune = (String) in.readObject();
+                    String provincia = (String) in.readObject();
+                    //int idAreaInteresse = (int) in.readObject();
+                    ArrayList<String> citta = (ArrayList<String>) in.readObject();
+                    database.insertMonitoringCenterData(nomeCentro, via, cap, numeroCivico, comune, provincia, citta);
+                    out.writeObject("Data inserted");
+                    break;
+                case "insertMonitoringCenterDataUser":
+                    System.out.println("Ricevuto comando insertMonitoringCenterData");
+                    String nomeCentroUser = (String) in.readObject();
+                    String nomeUser = (String) in.readObject();   
+                    database.insertMonitoringCenterDataUser(nomeCentroUser, nomeUser);
                     out.writeObject("Data inserted");
                     break;
                 case "registerOperator":
@@ -74,6 +90,12 @@ public class ServerThread implements Runnable {
                     ResultSet climateRs = database.viewClimateParameters();
                     out.writeObject(climateRs);
                     break;
+                case "checkExistingMonitoringCenter":
+                    System.out.println("Ricevuto comando checkExistingMonitoringCenter");
+                	String nomeUtente = (String) in.readObject();
+                	System.out.println(database.checkExistingMonitoringCenter(nomeUtente));
+                	out.writeObject(database.checkExistingMonitoringCenter(nomeUtente));
+            		break;
                 default:
                     out.writeObject("Unknown command");
                     break;

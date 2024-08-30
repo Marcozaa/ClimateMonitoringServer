@@ -40,6 +40,7 @@ public class HelloApplication extends Application {
 
         dataBase = new Database(nomeDatabase, usernameDB, passwordDB);
     //ClimateMonitoringApp
+    //postgres
         try {
             ss = new ServerSocket(PORT);
             System.out.println("Server ready");

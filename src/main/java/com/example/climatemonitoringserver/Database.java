@@ -1,6 +1,8 @@
 package com.example.climatemonitoringserver;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
     private String dbHost;
@@ -36,14 +38,43 @@ public class Database {
         }
         return null;
     }
+    
 
-    public synchronized void insertMonitoringCenterData(String data) {
+    public synchronized void insertMonitoringCenterData(String nome ,String via,int cap ,int numeroCivico,String comune,String provincia , ArrayList<String> citta ) {
 
+    System.out.println("eseguo query...");
         try {
 
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO monitoring_centers (data) VALUES (?)");
-            stmt.setString(1, data);
-            stmt.executeUpdate();
+            PreparedStatement stmt1 = connection.prepareStatement("INSERT INTO centrimonitoraggio (nome, via, cap, numero_civico, comune, provincia) VALUES (?, ?, ?, ?, ?, ?)");
+            stmt1.setString(1, nome);
+            stmt1.setString(2, via);
+            stmt1.setInt(3, cap);  // Codice postale
+            stmt1.setInt(4, numeroCivico);     // Numero civico
+    		stmt1.setString(5, comune);
+    		stmt1.setString(6, provincia);
+    		//stmt1.setInt(7, idAreaInteresse);
+    		stmt1.executeUpdate();
+    		for (String area : citta){
+                System.out.print(area);
+                PreparedStatement stmt2 = connection.prepareStatement("INSERT INTO cittacontrollate (id_areainteresse, id_centromonitoraggio) VALUES ((SELECT codice from areeinteresse WHERE nome = ?), (SELECT codice from centrimonitoraggio WHERE nome = ?))");
+                    		stmt2.setString(1, area);
+                                        stmt2.setString(2, nome);
+                    		stmt2.executeUpdate();
+
+            }
+
+            notifyAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public synchronized void insertMonitoringCenterDataUser(String centromonitoraggio, String nomeUser) {
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO operatore (centromonitoraggio) VALUES (?) WHERE nome = ?");
+            stmt.setString(1, centromonitoraggio);
+            stmt.setString(2, nomeUser);
             notifyAll();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -119,5 +150,32 @@ public class Database {
             e.printStackTrace();
         }
         return null;
+    }
+    
+    public boolean checkExistingMonitoringCenter(String nome){
+        try {
+            PreparedStatement stmt = connection.prepareStatement("SELECT centromonitoraggio FROM operatore WHERE nome = ?");
+            stmt.setString(1, nome);
+            ResultSet rs = stmt.executeQuery();
+            String value= null;
+            while (rs.next()) {
+                value = rs.getString(1);
+
+            }
+            if(value==null){
+                return false;
+            }else {
+                return true;
+            }
+
+            /*if(rs.next()){
+                return true;
+            }else {
+                return false;
+            }*/
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }
