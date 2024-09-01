@@ -72,7 +72,7 @@ public class Database {
     public synchronized void insertMonitoringCenterDataUser(String centromonitoraggio, String nomeUser) {
 
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO operatore (centromonitoraggio) VALUES (?) WHERE nome = ?");
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO operatore (centromonitoraggio) VALUES ((SELECT codice from centrimonitoraggio WHERE nome = ?)) WHERE nome = ?");
             stmt.setString(1, centromonitoraggio);
             stmt.setString(2, nomeUser);
             notifyAll();
