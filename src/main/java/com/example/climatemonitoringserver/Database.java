@@ -2,13 +2,16 @@ package com.example.climatemonitoringserver;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-
+import climatemonitoringserver.*;
 public class Database {
     private String dbHost;
     private String dbUsername;
     private String dbPassword;
     private Connection connection;
+
+
 
     public Database(String dbHost, String dbUsername, String dbPassword) {
 
@@ -59,6 +62,7 @@ public class Database {
             return aree;
         } catch (SQLException e) {
             e.printStackTrace();
+            //System.out.println("database");
         }
         return null;
 
@@ -202,5 +206,78 @@ public class Database {
             e.printStackTrace();
         }
         return true;
+    }
+
+
+    public CentroMonitoraggio getMonitoringCenterCode(String nome){
+        try {
+            PreparedStatement stmt = connection.prepareStatement("SELECT codice,nome,via,cap,numero_civico,comune,provincia FROM centrimonitoraggio WHERE codice = (SELECT centromonitoraggio FROM operatore WHERE nome = ?)");
+            stmt.setString(1, nome);
+            ResultSet rs = stmt.executeQuery();
+            CentroMonitoraggio centro = null;
+            while (rs.next()) {
+                int codice = rs.getInt(1);
+                String nomeCentro = rs.getString(2);
+                String via = rs.getString(3);
+                int cap = rs.getInt(4);
+                int numeroCivico = rs.getInt(5);
+                String comune = rs.getString(6);
+                String provincia = rs.getString(7);
+
+                centro = new CentroMonitoraggio(nomeCentro, codice, via, provincia, comune, cap, numeroCivico);
+                return centro;
+
+            }
+            return centro;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<AreaInteresse> getMonitoringCenterCities(int idCentro){
+        try {
+            List<AreaInteresse> citta = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement("SELECT nome,areeinteresse.codice  FROM cittacontrollate JOIN areeinteresse ON cittacontrollate.id_areainteresse = areeinteresse.codice WHERE id_centromonitoraggio = ?");
+            stmt.setInt(1, idCentro);
+            ResultSet rs = stmt.executeQuery();
+            AreaInteresse area= null;
+            while (rs.next()) {
+                String nome = rs.getString(1);
+                int codice = rs.getInt(2);
+                area = new AreaInteresse(nome, codice);
+                citta.add(area);
+            }
+            return citta;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void insertClimateParameters(int idCentro, int idAreaInteresse, int temperatura, int umidita, int pressione, int precipitazioni, int altitudineGhiacciai, int massaGhiaccia, int vento){
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO rilevazione (centro_di_monitoraggio, area_di_interesse, data_di_rilevazione, ora, temperatura, umidita, pressione, precipitazioni, altitudine_ghiacciai, massa_ghiacciai, vento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            stmt.setInt(1, idCentro);
+            stmt.setInt(2, idAreaInteresse);
+            stmt.setDate(3, new java.sql.Date(System.currentTimeMillis()));
+                        Time currentTime = new Time(Calendar.getInstance().getTimeInMillis());
+
+            stmt.setTime(4, currentTime);
+            stmt.setInt(5, temperatura);
+            stmt.setInt(6, umidita);
+            stmt.setInt(7, pressione);
+            stmt.setInt(8, precipitazioni);
+            stmt.setInt(9, altitudineGhiacciai);
+            stmt.setInt(10, massaGhiaccia);
+            stmt.setInt(11, vento);
+            stmt.executeUpdate();
+            notifyAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }

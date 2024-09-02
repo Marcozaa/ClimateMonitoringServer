@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class ServerThread implements Runnable {
     private Socket socket;
     private Database database;
@@ -81,8 +83,17 @@ public class ServerThread implements Runnable {
                     break;
                 case "insertClimateParameters":
                     System.out.println("Ricevuto comando insertClimateParameters");
-                    String parameters = (String) in.readObject();  // gestire inserimento
-                    database.insertClimateParameters(parameters);
+                    int idCentroMonitoraggio = (int) in.readObject();  // gestire inserimento
+                    int idAreaInteresse = (int) in.readObject();  // gestire inserimento
+                    int temperatura = (int) in.readObject();  
+                    int umidita = (int) in.readObject();
+                    int pressione = (int) in.readObject();
+                    int precipitazioni = (int) in.readObject();
+                    int altitudineGhiacciai = (int) in.readObject();
+                    int massaGhiacciai = (int) in.readObject();
+                    int velocitaVento = (int) in.readObject();
+                  
+                    database.insertClimateParameters(idCentroMonitoraggio, idAreaInteresse, temperatura, umidita, pressione, precipitazioni, altitudineGhiacciai, massaGhiacciai, velocitaVento);
                     out.writeObject("Climate parameters inserted");
                     break;
                 case "viewClimateParameters":
@@ -102,6 +113,16 @@ public class ServerThread implements Runnable {
                 	System.out.println(database.checkExistingMonitoringCenter(nomeUtente));
                 	out.writeObject(database.checkExistingMonitoringCenter(nomeUtente));
             		break;
+                case "getCentroFromOperatore":
+                	System.out.println("Ricevuto comando getCentroFromOperatore");
+                	String idOperatore = (String) in.readObject();
+                	out.writeObject(database.getMonitoringCenterCode(idOperatore));
+                	break;
+                case "getCittaControllate":
+                	System.out.println("Ricevuto comando getCittaControllate");
+                	int idCentro = (int) in.readObject();
+                	out.writeObject(database.getMonitoringCenterCities(idCentro));
+                	break;
                 default:
                     out.writeObject("Unknown command");
                     break;
@@ -109,6 +130,7 @@ public class ServerThread implements Runnable {
         	}
         } catch (IOException | ClassNotFoundException  e) {
             e.printStackTrace();
+            //System.out.println("serverthread");
         }
     }
 }
