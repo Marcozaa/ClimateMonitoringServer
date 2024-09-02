@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3e17ad2f-38ba-4ab4-917a-3292d4d095c5" name="Changes" comment="inserimento login client server da rivedere">
+    <list default="true" id="3e17ad2f-38ba-4ab4-917a-3292d4d095c5" name="Changes" comment="bottone disabilitato per utenti con centro e inizio query per inserimento centro in operatore">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/climatemonitoringserver/AreaInteresse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/climatemonitoringserver/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/climatemonitoringserver/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/climatemonitoringserver/ServerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/climatemonitoringserver/ServerThread.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +60,9 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\marco\Documents\softwaredev\serverLab\ClimateMonitoringServer\src\main\resources\font" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.example.climatemonitoringserver" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -69,7 +74,9 @@
       <updated>1724675397324</updated>
       <workItem from="1724675398835" duration="2000" />
       <workItem from="1725031276021" duration="47000" />
-      <workItem from="1725196982426" duration="2595000" />
+      <workItem from="1725196982426" duration="5254000" />
+      <workItem from="1725272694394" duration="1291000" />
+      <workItem from="1725275782944" duration="4633000" />
     </task>
     <task id="LOCAL-00001" summary="implementato interfaccia e connessione al dataBase">
       <created>1724706047116</created>
@@ -78,7 +85,14 @@
       <option name="project" value="LOCAL" />
       <updated>1724706047116</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="bottone disabilitato per utenti con centro e inizio query per inserimento centro in operatore">
+      <created>1725199852753</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1725199852753</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -97,6 +111,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="implementato interfaccia e connessione al dataBase" />
-    <option name="LAST_COMMIT_MESSAGE" value="implementato interfaccia e connessione al dataBase" />
+    <MESSAGE value="bottone disabilitato per utenti con centro e inizio query per inserimento centro in operatore" />
+    <option name="LAST_COMMIT_MESSAGE" value="bottone disabilitato per utenti con centro e inizio query per inserimento centro in operatore" />
   </component>
 </project>

@@ -44,7 +44,7 @@ public class ServerThread implements Runnable {
                     out.writeObject("Data inserted");
                     break;
                 case "insertMonitoringCenterDataUser":
-                    System.out.println("Ricevuto comando insertMonitoringCenterData");
+                    System.out.println("Ricevuto comando insertMonitoringCenterDataUser");
                     String nomeCentroUser = (String) in.readObject();
                     String nomeUser = (String) in.readObject();   
                     database.insertMonitoringCenterDataUser(nomeCentroUser, nomeUser);
@@ -90,6 +90,12 @@ public class ServerThread implements Runnable {
                     ResultSet climateRs = database.viewClimateParameters();
                     out.writeObject(climateRs);
                     break;
+                case "getAreeInteresse":
+                    System.out.println("Ricevuto comando getAreeInteresse");
+                    String cittaRicercata = (String) in.readObject();
+
+                    out.writeObject(database.getAreeInteresse(cittaRicercata));
+                break;
                 case "checkExistingMonitoringCenter":
                     System.out.println("Ricevuto comando checkExistingMonitoringCenter");
                 	String nomeUtente = (String) in.readObject();

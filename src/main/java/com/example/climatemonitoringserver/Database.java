@@ -38,7 +38,31 @@ public class Database {
         }
         return null;
     }
-    
+
+    public List<AreaInteresse> getAreeInteresse(String areaCercata){
+        try {
+            List<AreaInteresse> aree = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement("SELECT nome,latitudine,longitudine FROM areeinteresse WHERE nome iLIKE ?");
+            stmt.setString(1,  "%" + areaCercata + "%");
+            ResultSet rs = stmt.executeQuery();
+            String value= null;
+            while (rs.next()) {
+
+                String nome = rs.getString(1);
+                double latitudine = rs.getDouble(2);
+                double longitudine = rs.getDouble(3);
+                AreaInteresse area = new AreaInteresse(nome, latitudine, longitudine);
+                aree.add(area);
+
+            }
+            System.out.println(aree);
+            return aree;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 
     public synchronized void insertMonitoringCenterData(String nome ,String via,int cap ,int numeroCivico,String comune,String provincia , ArrayList<String> citta ) {
 
@@ -72,9 +96,10 @@ public class Database {
     public synchronized void insertMonitoringCenterDataUser(String centromonitoraggio, String nomeUser) {
 
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO operatore (centromonitoraggio) VALUES ((SELECT codice from centrimonitoraggio WHERE nome = ?)) WHERE nome = ?");
+            PreparedStatement stmt = connection.prepareStatement("UPDATE operatore SET centromonitoraggio = (SELECT codice from centrimonitoraggio WHERE nome = ?) WHERE nome = ?");
             stmt.setString(1, centromonitoraggio);
             stmt.setString(2, nomeUser);
+            stmt.executeUpdate();
             notifyAll();
         } catch (SQLException e) {
             e.printStackTrace();
