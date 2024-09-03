@@ -280,4 +280,46 @@ public class Database {
         }
 
     }
+
+    public List<Rilevazione> getRilevazioniCitta(String cittaCercata){
+        try {
+            List<Rilevazione> rilevazioni = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM rilevazione JOIN centrimonitoraggio ON rilevazione.centro_di_monitoraggio = centrimonitoraggio.codice JOIN areeinteresse ON rilevazione.area_di_interesse = areeinteresse.codice  WHERE area_di_interesse = (SELECT codice FROM areeinteresse WHERE nome = ?)");
+            stmt.setString(1, cittaCercata);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                int idCentro = rs.getInt(2);
+                int idAreaInteresse = rs.getInt(3);
+                Date dataRilevazione = rs.getDate(4);
+                Time oraRilevazione = rs.getTime(5);
+                int vento = rs.getInt(6);
+                int umidita = rs.getInt(7);
+                int pressione = rs.getInt(8);
+                int temperatura = rs.getInt(9);
+                int precipitazioni = rs.getInt(12);
+                int altitudineGhiacciai = rs.getInt(10);
+                int massaGhiacciai = rs.getInt(11);
+                int codiceCentro = rs.getInt(13);
+                String nomeCentro = rs.getString(14);
+                String via = rs.getString(15);
+                int cap = rs.getInt(16);
+                int numeroCivico = rs.getInt(17);
+                String comune = rs.getString(18);
+                String provincia = rs.getString(19);
+                int codiceArea = rs.getInt(21);
+                String nomeArea = rs.getString(22);
+                Double latitudine = rs.getDouble(23);
+                Double longitudine = rs.getDouble(24);
+                AreaInteresse area = new AreaInteresse(nomeArea, Integer.toString(codiceArea), latitudine, longitudine);
+                CentroMonitoraggio centro = new CentroMonitoraggio(nomeCentro, codiceCentro, via, provincia, comune, cap, numeroCivico);
+                Rilevazione rilevazione = new Rilevazione(id, centro, area, dataRilevazione, oraRilevazione, temperatura, umidita, pressione, precipitazioni, altitudineGhiacciai, massaGhiacciai, vento);
+                rilevazioni.add(rilevazione);
+            }
+            return rilevazioni;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

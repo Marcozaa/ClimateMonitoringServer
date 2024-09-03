@@ -123,6 +123,14 @@ public class ServerThread implements Runnable {
                 	int idCentro = (int) in.readObject();
                 	out.writeObject(database.getMonitoringCenterCities(idCentro));
                 	break;
+                case "getRilevazioniCitta":
+                    System.out.println("Ricevuto comando getRilevazioniCitta");
+                    String cittaCercata = (String) in.readObject();
+                    out.writeObject(database.getRilevazioniCitta(cittaCercata));
+                    break;
+
+
+
                 default:
                     out.writeObject("Unknown command");
                     break;
