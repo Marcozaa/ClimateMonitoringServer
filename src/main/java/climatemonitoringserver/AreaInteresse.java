@@ -46,7 +46,7 @@ public class AreaInteresse implements Serializable {
     public AreaInteresse(String nome, String stato, double latitudine, double longitudine, double distanza) {
         this.nome = nome;
         this.coordX = latitudine;
-        this.coordY = coordY;
+        this.coordY = longitudine;
         this.stato = stato;
         this.distanza = distanza;
     }
