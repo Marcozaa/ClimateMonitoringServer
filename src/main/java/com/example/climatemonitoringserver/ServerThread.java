@@ -128,6 +128,12 @@ public class ServerThread implements Runnable {
                     String cittaCercata = (String) in.readObject();
                     out.writeObject(database.getRilevazioniCitta(cittaCercata));
                     break;
+                case "getAreeByCoordinate":
+                    System.out.println("Ricevuto comando getAreeByCoordinate");
+                    double lat = (double) in.readObject();
+                    double lon = (double) in.readObject();
+                    out.writeObject(database.getAreeByCoordinate(lat, lon));
+                    break;
 
 
 

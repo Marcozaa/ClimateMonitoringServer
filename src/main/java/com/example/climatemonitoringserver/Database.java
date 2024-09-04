@@ -322,4 +322,31 @@ public class Database {
         }
         return null;
     }
+
+    public List<AreaInteresse> getAreeByCoordinate(double lat, double lon){
+        try{
+            List<AreaInteresse> aree = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement(" SELECT codice,nome, latitudine, longitudine, distance FROM (SELECT nome, codice, latitudine, longitudine,SQRT(POW(111.2 * (latitudine - ?), 2) +POW(111.2 * (?-  longitudine) * COS(latitudine / 57.3), 2)) AS distance FROM areeinteresse) AS subquery WHERE distance < 500 ORDER BY distance");
+
+            stmt.setDouble(1, lat);
+            stmt.setDouble(2, lon);
+            ResultSet rs = stmt.executeQuery();
+
+
+            while (rs.next()) {
+                int codice = rs.getInt(1);
+                String nome = rs.getString(2);
+                double latitudine = rs.getDouble(3);
+                double longitudine = rs.getDouble(4);
+                double distanza = rs.getDouble(5); // distanza in km
+                AreaInteresse area = new AreaInteresse(nome, Integer.toString(codice), latitudine, longitudine, distanza);
+
+                aree.add(area);
+            }
+            return aree;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }

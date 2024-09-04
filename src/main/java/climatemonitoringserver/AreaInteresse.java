@@ -11,11 +11,16 @@ import java.io.Serializable;
  * Contiene il nome, le coordinate e lo stato di un'area di interesse
  */
 public class AreaInteresse implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private String nome;
     private Double coordX;
     private Double coordY;
     private String stato;
+
+    private double distanza;
+
+
+
     private int id;
 
 
@@ -34,8 +39,16 @@ public class AreaInteresse implements Serializable {
     public AreaInteresse(String nome, String stato, double latitudine, double longitudine) {
         this.nome = nome;
         this.coordX = latitudine;
+        this.coordY = longitudine;
+        this.stato = stato;
+    }
+
+    public AreaInteresse(String nome, String stato, double latitudine, double longitudine, double distanza) {
+        this.nome = nome;
+        this.coordX = latitudine;
         this.coordY = coordY;
         this.stato = stato;
+        this.distanza = distanza;
     }
 
     public AreaInteresse(String nome, double latitudine, double longitudine) {
@@ -45,9 +58,9 @@ public class AreaInteresse implements Serializable {
     }
 
     public AreaInteresse(String nome, int id) {
-            this.nome = nome;
-            this.id = id;
-        }
+        this.nome = nome;
+        this.id = id;
+    }
 
     /**
      * Metodo che restituisce il nome dell'area di interesse
@@ -86,11 +99,19 @@ public class AreaInteresse implements Serializable {
      * @return
      */
     public String getStato() {
-    	return stato;
+        return stato;
     }
 
     @Override
     public String toString() {
         return nome;
+    }
+
+    public double getDistanza() {
+        return distanza;
+    }
+
+    public void setDistanza(double distanza) {
+        this.distanza = distanza;
     }
 }
