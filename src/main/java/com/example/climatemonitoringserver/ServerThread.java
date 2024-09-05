@@ -134,6 +134,11 @@ public class ServerThread implements Runnable {
                     double lon = (double) in.readObject();
                     out.writeObject(database.getAreeByCoordinate(lat, lon));
                     break;
+                case "getStatistics":
+                    System.out.println("Ricevuto comando getStatistics");
+                    String citta_cercata = (String) in.readObject();
+                    out.writeObject(database.getStatistics(citta_cercata));
+                    break;
 
 
 

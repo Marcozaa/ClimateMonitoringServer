@@ -286,6 +286,9 @@ public class Database {
             List<Rilevazione> rilevazioni = new ArrayList<>();
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM rilevazione JOIN centrimonitoraggio ON rilevazione.centro_di_monitoraggio = centrimonitoraggio.codice JOIN areeinteresse ON rilevazione.area_di_interesse = areeinteresse.codice  WHERE area_di_interesse = (SELECT codice FROM areeinteresse WHERE nome = ?)");
             stmt.setString(1, cittaCercata);
+
+
+
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt(1);
@@ -349,4 +352,74 @@ public class Database {
         }
 
     }
-}
+
+
+    public List<Double> getStatistics(String cittaCercata){
+            try {
+                List<Rilevazione> rilevazioni = new ArrayList<>();
+                List <Double> averages = new ArrayList<>();
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM rilevazione JOIN centrimonitoraggio ON rilevazione.centro_di_monitoraggio = centrimonitoraggio.codice JOIN areeinteresse ON rilevazione.area_di_interesse = areeinteresse.codice  WHERE area_di_interesse = (SELECT codice FROM areeinteresse WHERE nome = ?)");
+                stmt.setString(1, cittaCercata);
+                double averageTemperature = 0;
+                double averageHumidity = 0;
+                double averagePressure = 0;
+                double averagePrecipitations = 0;
+                double averageAltitude = 0;
+                double averageMass = 0;
+                double averageWind = 0;
+
+
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    int id = rs.getInt(1);
+                    int idCentro = rs.getInt(2);
+                    int idAreaInteresse = rs.getInt(3);
+                    Date dataRilevazione = rs.getDate(4);
+                    Time oraRilevazione = rs.getTime(5);
+                    int vento = rs.getInt(6);
+                    int umidita = rs.getInt(7);
+                    int pressione = rs.getInt(8);
+                    int temperatura = rs.getInt(9);
+                    int precipitazioni = rs.getInt(12);
+                    int altitudineGhiacciai = rs.getInt(10);
+                    int massaGhiacciai = rs.getInt(11);
+                    int codiceCentro = rs.getInt(13);
+                    String nomeCentro = rs.getString(14);
+                    String via = rs.getString(15);
+                    int cap = rs.getInt(16);
+                    int numeroCivico = rs.getInt(17);
+                    String comune = rs.getString(18);
+                    String provincia = rs.getString(19);
+                    int codiceArea = rs.getInt(21);
+                    String nomeArea = rs.getString(22);
+                    Double latitudine = rs.getDouble(23);
+                    Double longitudine = rs.getDouble(24);
+
+                    AreaInteresse area = new AreaInteresse(nomeArea, Integer.toString(codiceArea), latitudine, longitudine);
+                    CentroMonitoraggio centro = new CentroMonitoraggio(nomeCentro, codiceCentro, via, provincia, comune, cap, numeroCivico);
+                    Rilevazione rilevazione = new Rilevazione(id, centro, area, dataRilevazione, oraRilevazione, temperatura, umidita, pressione, precipitazioni, altitudineGhiacciai, massaGhiacciai, vento);
+                    rilevazioni.add(rilevazione);
+                }
+                averageAltitude = rilevazioni.stream().mapToDouble(Rilevazione::getAltitudineGhiacciai).average().orElse(0);
+                averageHumidity = rilevazioni.stream().mapToDouble(Rilevazione::getUmidita).average().orElse(0);
+                averageMass = rilevazioni.stream().mapToDouble(Rilevazione::getMassaGhiacciai).average().orElse(0);
+                averagePrecipitations = rilevazioni.stream().mapToDouble(Rilevazione::getPrecipitazioni).average().orElse(0);
+                averagePressure = rilevazioni.stream().mapToDouble(Rilevazione::getPressione).average().orElse(0);
+                averageTemperature = rilevazioni.stream().mapToDouble(Rilevazione::getTemperatura).average().orElse(0);
+                averageWind = rilevazioni.stream().mapToDouble(Rilevazione::getVento).average().orElse(0);
+
+                averages.add(averageTemperature);
+                averages.add(averageHumidity);
+                averages.add(averagePressure);
+                averages.add(averagePrecipitations);
+                averages.add(averageAltitude);
+                averages.add(averageMass);
+                averages.add(averageWind);
+
+                return averages;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+     }
