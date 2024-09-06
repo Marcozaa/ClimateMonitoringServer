@@ -21,5 +21,5 @@
    <TextField fx:id="dbUsername" />
    <Label text="Password" />
    <TextField fx:id="dbPassword" />
-   <Button fx:id="dbInvioDati" mnemonicParsing="false" onAction="#invioDatiDB" text="Button" />
+   <Button fx:id="dbInvioDati" mnemonicParsing="false" onAction="#invioDatiDB" text="Avvia connessione" />
 </VBox>
