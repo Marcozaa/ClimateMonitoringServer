@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3e17ad2f-38ba-4ab4-917a-3292d4d095c5" name="Changes" comment="ricerca area per coordinate">
+    <list default="true" id="3e17ad2f-38ba-4ab4-917a-3292d4d095c5" name="Changes" comment="correzione sviste">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/climatemonitoringserver/AreaInteresse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/climatemonitoringserver/AreaInteresse.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +74,9 @@
       <workItem from="1725196982426" duration="5254000" />
       <workItem from="1725272694394" duration="1291000" />
       <workItem from="1725275782944" duration="5304000" />
-      <workItem from="1725367701746" duration="7905000" />
+      <workItem from="1725367701746" duration="9687000" />
+      <workItem from="1725611367605" duration="118000" />
+      <workItem from="1725720397777" duration="1466000" />
     </task>
     <task id="LOCAL-00001" summary="implementato interfaccia e connessione al dataBase">
       <created>1724706047116</created>
@@ -112,7 +113,14 @@
       <option name="project" value="LOCAL" />
       <updated>1725459272391</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="correzione sviste">
+      <created>1725459757503</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1725459757503</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -135,6 +143,7 @@
     <MESSAGE value="Aggiunta select per aree ricercate" />
     <MESSAGE value="Aggiunta select per rilevazioni di una determinata area" />
     <MESSAGE value="ricerca area per coordinate" />
-    <option name="LAST_COMMIT_MESSAGE" value="ricerca area per coordinate" />
+    <MESSAGE value="correzione sviste" />
+    <option name="LAST_COMMIT_MESSAGE" value="correzione sviste" />
   </component>
 </project>
