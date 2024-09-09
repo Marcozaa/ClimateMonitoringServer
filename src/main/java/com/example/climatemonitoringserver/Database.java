@@ -70,7 +70,7 @@ public class Database {
 
     public synchronized void insertMonitoringCenterData(String nome ,String via,int cap ,int numeroCivico,String comune,String provincia , ArrayList<String> citta ) {
 
-    System.out.println("eseguo query...");
+        System.out.println("eseguo query...");
         try {
 
             PreparedStatement stmt1 = connection.prepareStatement("INSERT INTO centrimonitoraggio (nome, via, cap, numero_civico, comune, provincia) VALUES (?, ?, ?, ?, ?, ?)");
@@ -78,16 +78,16 @@ public class Database {
             stmt1.setString(2, via);
             stmt1.setInt(3, cap);  // Codice postale
             stmt1.setInt(4, numeroCivico);     // Numero civico
-    		stmt1.setString(5, comune);
-    		stmt1.setString(6, provincia);
-    		//stmt1.setInt(7, idAreaInteresse);
-    		stmt1.executeUpdate();
-    		for (String area : citta){
+            stmt1.setString(5, comune);
+            stmt1.setString(6, provincia);
+            //stmt1.setInt(7, idAreaInteresse);
+            stmt1.executeUpdate();
+            for (String area : citta){
                 System.out.print(area);
                 PreparedStatement stmt2 = connection.prepareStatement("INSERT INTO cittacontrollate (id_areainteresse, id_centromonitoraggio) VALUES ((SELECT codice from areeinteresse WHERE nome = ?), (SELECT codice from centrimonitoraggio WHERE nome = ?))");
-                    		stmt2.setString(1, area);
-                                        stmt2.setString(2, nome);
-                    		stmt2.executeUpdate();
+                stmt2.setString(1, area);
+                stmt2.setString(2, nome);
+                stmt2.executeUpdate();
 
             }
 
@@ -96,7 +96,7 @@ public class Database {
             e.printStackTrace();
         }
     }
-    
+
     public synchronized void insertMonitoringCenterDataUser(String centromonitoraggio, String nomeUser) {
 
         try {
@@ -180,7 +180,7 @@ public class Database {
         }
         return null;
     }
-    
+
     public boolean checkExistingMonitoringCenter(String nome){
         try {
             PreparedStatement stmt = connection.prepareStatement("SELECT centromonitoraggio FROM operatore WHERE nome = ?");
@@ -253,17 +253,17 @@ public class Database {
             e.printStackTrace();
         }
 
-        return null;
+        return null;//csc
     }
 
-    public void insertClimateParameters(int idCentro, int idAreaInteresse, int temperatura, int umidita, int pressione, int precipitazioni, int altitudineGhiacciai, int massaGhiaccia, int vento){
+    public synchronized void insertClimateParameters(int idCentro, int idAreaInteresse, int temperatura, int umidita, int pressione, int precipitazioni, int altitudineGhiacciai, int massaGhiaccia, int vento){
 
         try {
             PreparedStatement stmt = connection.prepareStatement("INSERT INTO rilevazione (centro_di_monitoraggio, area_di_interesse, data_di_rilevazione, ora, temperatura, umidita, pressione, precipitazioni, altitudine_ghiacciai, massa_ghiacciai, vento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             stmt.setInt(1, idCentro);
             stmt.setInt(2, idAreaInteresse);
             stmt.setDate(3, new java.sql.Date(System.currentTimeMillis()));
-                        Time currentTime = new Time(Calendar.getInstance().getTimeInMillis());
+            Time currentTime = new Time(Calendar.getInstance().getTimeInMillis());
 
             stmt.setTime(4, currentTime);
             stmt.setInt(5, temperatura);
@@ -353,73 +353,96 @@ public class Database {
 
     }
 
+    public List<AreaInteresse> getAllCity(){
+        try {
+            List<AreaInteresse> aree = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement("SELECT nome,codice FROM areeinteresse");
+            ResultSet rs = stmt.executeQuery();
+            String value= null;
+            while (rs.next()) {
+
+                String nome = rs.getString(1);
+                int codice = rs.getInt(2);
+                AreaInteresse area = new AreaInteresse(nome, codice);
+                aree.add(area);
+
+            }
+            return aree;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            //System.out.println("database");
+        }
+        return null;
+
+    }
+
 
     public List<Double> getStatistics(String cittaCercata){
-            try {
-                List<Rilevazione> rilevazioni = new ArrayList<>();
-                List <Double> averages = new ArrayList<>();
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM rilevazione JOIN centrimonitoraggio ON rilevazione.centro_di_monitoraggio = centrimonitoraggio.codice JOIN areeinteresse ON rilevazione.area_di_interesse = areeinteresse.codice  WHERE area_di_interesse = (SELECT codice FROM areeinteresse WHERE nome = ?)");
-                stmt.setString(1, cittaCercata);
-                double averageTemperature = 0;
-                double averageHumidity = 0;
-                double averagePressure = 0;
-                double averagePrecipitations = 0;
-                double averageAltitude = 0;
-                double averageMass = 0;
-                double averageWind = 0;
+        try {
+            List<Rilevazione> rilevazioni = new ArrayList<>();
+            List <Double> averages = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM rilevazione JOIN centrimonitoraggio ON rilevazione.centro_di_monitoraggio = centrimonitoraggio.codice JOIN areeinteresse ON rilevazione.area_di_interesse = areeinteresse.codice  WHERE area_di_interesse = (SELECT codice FROM areeinteresse WHERE nome = ?)");
+            stmt.setString(1, cittaCercata);
+            double averageTemperature = 0;
+            double averageHumidity = 0;
+            double averagePressure = 0;
+            double averagePrecipitations = 0;
+            double averageAltitude = 0;
+            double averageMass = 0;
+            double averageWind = 0;
 
 
-                ResultSet rs = stmt.executeQuery();
-                while (rs.next()) {
-                    int id = rs.getInt(1);
-                    int idCentro = rs.getInt(2);
-                    int idAreaInteresse = rs.getInt(3);
-                    Date dataRilevazione = rs.getDate(4);
-                    Time oraRilevazione = rs.getTime(5);
-                    int vento = rs.getInt(6);
-                    int umidita = rs.getInt(7);
-                    int pressione = rs.getInt(8);
-                    int temperatura = rs.getInt(9);
-                    int precipitazioni = rs.getInt(12);
-                    int altitudineGhiacciai = rs.getInt(10);
-                    int massaGhiacciai = rs.getInt(11);
-                    int codiceCentro = rs.getInt(13);
-                    String nomeCentro = rs.getString(14);
-                    String via = rs.getString(15);
-                    int cap = rs.getInt(16);
-                    int numeroCivico = rs.getInt(17);
-                    String comune = rs.getString(18);
-                    String provincia = rs.getString(19);
-                    int codiceArea = rs.getInt(21);
-                    String nomeArea = rs.getString(22);
-                    Double latitudine = rs.getDouble(23);
-                    Double longitudine = rs.getDouble(24);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                int idCentro = rs.getInt(2);
+                int idAreaInteresse = rs.getInt(3);
+                Date dataRilevazione = rs.getDate(4);
+                Time oraRilevazione = rs.getTime(5);
+                int vento = rs.getInt(6);
+                int umidita = rs.getInt(7);
+                int pressione = rs.getInt(8);
+                int temperatura = rs.getInt(9);
+                int precipitazioni = rs.getInt(12);
+                int altitudineGhiacciai = rs.getInt(10);
+                int massaGhiacciai = rs.getInt(11);
+                int codiceCentro = rs.getInt(13);
+                String nomeCentro = rs.getString(14);
+                String via = rs.getString(15);
+                int cap = rs.getInt(16);
+                int numeroCivico = rs.getInt(17);
+                String comune = rs.getString(18);
+                String provincia = rs.getString(19);
+                int codiceArea = rs.getInt(21);
+                String nomeArea = rs.getString(22);
+                Double latitudine = rs.getDouble(23);
+                Double longitudine = rs.getDouble(24);
 
-                    AreaInteresse area = new AreaInteresse(nomeArea, Integer.toString(codiceArea), latitudine, longitudine);
-                    CentroMonitoraggio centro = new CentroMonitoraggio(nomeCentro, codiceCentro, via, provincia, comune, cap, numeroCivico);
-                    Rilevazione rilevazione = new Rilevazione(id, centro, area, dataRilevazione, oraRilevazione, temperatura, umidita, pressione, precipitazioni, altitudineGhiacciai, massaGhiacciai, vento);
-                    rilevazioni.add(rilevazione);
-                }
-                averageAltitude = rilevazioni.stream().mapToDouble(Rilevazione::getAltitudineGhiacciai).average().orElse(0);
-                averageHumidity = rilevazioni.stream().mapToDouble(Rilevazione::getUmidita).average().orElse(0);
-                averageMass = rilevazioni.stream().mapToDouble(Rilevazione::getMassaGhiacciai).average().orElse(0);
-                averagePrecipitations = rilevazioni.stream().mapToDouble(Rilevazione::getPrecipitazioni).average().orElse(0);
-                averagePressure = rilevazioni.stream().mapToDouble(Rilevazione::getPressione).average().orElse(0);
-                averageTemperature = rilevazioni.stream().mapToDouble(Rilevazione::getTemperatura).average().orElse(0);
-                averageWind = rilevazioni.stream().mapToDouble(Rilevazione::getVento).average().orElse(0);
-
-                averages.add(averageTemperature);
-                averages.add(averageHumidity);
-                averages.add(averagePressure);
-                averages.add(averagePrecipitations);
-                averages.add(averageAltitude);
-                averages.add(averageMass);
-                averages.add(averageWind);
-
-                return averages;
-            } catch (SQLException e) {
-                e.printStackTrace();
+                AreaInteresse area = new AreaInteresse(nomeArea, Integer.toString(codiceArea), latitudine, longitudine);
+                CentroMonitoraggio centro = new CentroMonitoraggio(nomeCentro, codiceCentro, via, provincia, comune, cap, numeroCivico);
+                Rilevazione rilevazione = new Rilevazione(id, centro, area, dataRilevazione, oraRilevazione, temperatura, umidita, pressione, precipitazioni, altitudineGhiacciai, massaGhiacciai, vento);
+                rilevazioni.add(rilevazione);
             }
-            return null;
+            averageAltitude = rilevazioni.stream().mapToDouble(Rilevazione::getAltitudineGhiacciai).average().orElse(0);
+            averageHumidity = rilevazioni.stream().mapToDouble(Rilevazione::getUmidita).average().orElse(0);
+            averageMass = rilevazioni.stream().mapToDouble(Rilevazione::getMassaGhiacciai).average().orElse(0);
+            averagePrecipitations = rilevazioni.stream().mapToDouble(Rilevazione::getPrecipitazioni).average().orElse(0);
+            averagePressure = rilevazioni.stream().mapToDouble(Rilevazione::getPressione).average().orElse(0);
+            averageTemperature = rilevazioni.stream().mapToDouble(Rilevazione::getTemperatura).average().orElse(0);
+            averageWind = rilevazioni.stream().mapToDouble(Rilevazione::getVento).average().orElse(0);
+
+            averages.add(averageTemperature);
+            averages.add(averageHumidity);
+            averages.add(averagePressure);
+            averages.add(averagePrecipitations);
+            averages.add(averageAltitude);
+            averages.add(averageMass);
+            averages.add(averageWind);
+
+            return averages;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-     }
+        return null;
+    }
+}

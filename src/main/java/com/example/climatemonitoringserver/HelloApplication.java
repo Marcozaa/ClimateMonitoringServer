@@ -3,10 +3,12 @@ package com.example.climatemonitoringserver;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -39,8 +41,8 @@ public class HelloApplication extends Application {
         String passwordDB = dbPassword.getText();
 
         dataBase = new Database(nomeDatabase, usernameDB, passwordDB);
-    //ClimateMonitoringApp
-    //postgres
+        //ClimateMonitoringApp
+        //postgres
         try {
             ss = new ServerSocket(PORT);
             System.out.println("Server ready");
@@ -67,8 +69,8 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 500, 400);
+        Parent fxmlLoader = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+        Scene scene = new Scene(fxmlLoader);
         stage.setTitle("Hello!");
 
 
